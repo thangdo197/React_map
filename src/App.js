@@ -1,5 +1,12 @@
 import React, { useRef } from "react";
-import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  GeoJSON,
+  Tooltip,
+  Marker,
+  Popup,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import proj4 from "proj4";
 import L from "leaflet";
@@ -27,6 +34,11 @@ const VN2000Map = () => {
   const convertVN2000ToWGS84 = (x, y) => {
     const [lon, lat] = proj4("EPSG:3405", "EPSG:4326", [x, y]);
     return [lat, lon];
+  };
+
+  const convertWGS84ToVN2000 = (lat, lon) => {
+    const [x, y] = proj4("EPSG:4326", "EPSG:3405", [lon, lat]);
+    return [x, y];
   };
 
   const markers = [
@@ -72,11 +84,21 @@ const VN2000Map = () => {
           style={{ color: "grey", weight: 2 }}
         />
 
-        {markers.map((marker, index) => (
-          <Marker key={index} position={marker.position} icon={icon}>
-            <Popup>{marker.label}</Popup>
-          </Marker>
-        ))}
+        {markers.map((marker, index) => {
+          const [x, y] = convertWGS84ToVN2000(
+            marker.position[0],
+            marker.position[1]
+          ); // Chuyển đổi tọa độ sang VN2000
+          return (
+            <Marker key={index} position={marker.position} icon={icon}>
+              <Tooltip>
+                {`Tọa độ VN2000: ${x.toFixed(2)}, ${y.toFixed(2)}`}{" "}
+                {/* Hiển thị tọa độ VN2000 */}
+              </Tooltip>
+              <Popup>{marker.label}</Popup>
+            </Marker>
+          );
+        })}
       </MapContainer>
     </div>
   );
