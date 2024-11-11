@@ -76,7 +76,7 @@ const VN2000Map = () => {
                   [boundingBox[1][1], boundingBox[0][0]],
                   [boundingBox[1][1], boundingBox[1][0]],
                   [boundingBox[0][1], boundingBox[1][0]],
-                  [boundingBox[0][1], boundingBox[0][0]], // Để khép kín polygon
+                  [boundingBox[0][1], boundingBox[0][0]],
                 ],
               ],
             },
@@ -88,12 +88,13 @@ const VN2000Map = () => {
           const [x, y] = convertWGS84ToVN2000(
             marker.position[0],
             marker.position[1]
-          ); // Chuyển đổi tọa độ sang VN2000
+          );
           return (
             <Marker key={index} position={marker.position} icon={icon}>
               <Tooltip>
-                {`Tọa độ VN2000: ${x.toFixed(2)}, ${y.toFixed(2)}`}{" "}
-                {/* Hiển thị tọa độ VN2000 */}
+                {`${marker.label} coordinates by VN2000: ${x.toFixed(
+                  2
+                )}, ${y.toFixed(2)}`}{" "}
               </Tooltip>
               <Popup>{marker.label}</Popup>
             </Marker>
